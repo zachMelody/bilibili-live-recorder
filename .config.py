@@ -1,0 +1,1 @@
+inform_url = 'https://sc.ftqq.com/{input your secret key here}.send'

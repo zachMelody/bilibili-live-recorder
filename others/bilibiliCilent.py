@@ -9,9 +9,8 @@ from xml.etree import ElementTree
 from xmlrpc.client import ServerProxy
 
 import aiohttp
-import requests
 
-from settings import *
+from others.settings import *
 
 
 class BilibiliClient:
