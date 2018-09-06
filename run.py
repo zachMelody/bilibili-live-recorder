@@ -43,7 +43,7 @@ class BiliBiliLiveRecorder(BiliBiliLive):
         data = dict()
         data['c_time'] = time.strftime('%Y%m%d', time.localtime(time.time()))
         data['room_id'] = self.room_id
-        return '_'.join(data)
+        return '_'.join(data.values())
 
 
 if __name__ == '__main__':
@@ -60,5 +60,5 @@ if __name__ == '__main__':
         urls = recorder.check(interval=5*60)
         filename = recorder.generate_filename()
         c_filename = os.path.join(os.getcwd(), 'files', filename+'.flv')
-        recorder.record(urls[0], filename)
+        recorder.record(urls[0], c_filename)
         print('录制完成')
