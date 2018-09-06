@@ -3,6 +3,8 @@ import os, sys
 import requests
 import time
 import config
+import urllib3
+urllib3.disable_warnings()
 
 
 class BiliBiliLiveRecorder(BiliBiliLive):
