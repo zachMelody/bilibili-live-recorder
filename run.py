@@ -41,7 +41,8 @@ class BiliBiliLiveRecorder(BiliBiliLive):
 
     def generate_filename(self):
         data = dict()
-        data['c_time'] = time.strftime('%Y%m%d', time.localtime(time.time()))
+        data['c_day'] = time.strftime('%Y%m%d', time.localtime(time.time()))
+        data['c_time'] = time.strftime('%H%M', time.localtime(time.time()))
         data['room_id'] = self.room_id
         return '_'.join(data.values())
 
