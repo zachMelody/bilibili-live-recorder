@@ -3,6 +3,8 @@ import os, sys
 import requests
 import time
 import config
+import utils
+import multiprocessing
 import urllib3
 urllib3.disable_warnings()
 
@@ -10,41 +12,35 @@ urllib3.disable_warnings()
 class BiliBiliLiveRecorder(BiliBiliLive):
     def __init__(self, room_id):
         super().__init__(room_id)
-        self.inform_url = config.inform_url
+        self.inform = utils.inform
+        self.print = utils.print_log
 
     def check(self, interval):
         while True:
             room_info = self.get_room_info()
             if room_info['status']:
-                self.inform(desp=room_info['roomname'])
+                self.inform(room_id=self.room_id,desp=room_info['roomname'])
+                self.print(self.room_id, room_info['roomname'])
                 break
             else:
-                print('等待开播')
+                self.print(self.room_id, '等待开播')
             time.sleep(interval)
         return self.get_live_urls()
 
-    @staticmethod
-    def record(record_url, output_filename):
-        print('√ 正在录制...')
+    def record(self, record_url, output_filename):
+        self.print(self.room_id, '√ 正在录制...' + self.room_id)
         resp = requests.get(record_url, stream=True)
         with open(output_filename, "wb") as f:
             for chunk in resp.iter_content(chunk_size=512):
                 f.write(chunk) if chunk else None
 
-    def inform(self, desp=''):
-        param = {
-            'text': '直播间：{} 开始直播啦！'.format(self.room_id),
-            'desp': desp,
-        }
-        resp = requests.get(url=self.inform_url, params=param)
-        print('通知完成！') if resp.status_code == 200 else None
-
-    def generate_filename(self):
-        data = dict()
-        data['c_day'] = time.strftime('%Y%m%d', time.localtime(time.time()))
-        data['c_time'] = time.strftime('%H%M', time.localtime(time.time()))
-        data['room_id'] = self.room_id
-        return '_'.join(data.values())
+    def run(self):
+        while True:
+            urls = self.check(interval=5*60)
+            filename = utils.generate_filename(self.room_id)
+            c_filename = os.path.join(os.getcwd(), 'files', filename)
+            self.record(urls[0], c_filename)
+            self.print(self.room_id, '录制完成')
 
 
 if __name__ == '__main__':
@@ -52,14 +48,13 @@ if __name__ == '__main__':
     if len(sys.argv) == 2:
         input_id = str(sys.argv[1])
     elif len(sys.argv) == 1:
-        input_id = '1075'  # input_id = '917766'
+        input_id = config.rooms  # input_id = '917766' '1075'
     else:
         raise ZeroDivisionError('请检查输入的命令是否正确 例如：python3 run.py 10086')
 
-    while True:
-        recorder = BiliBiliLiveRecorder(input_id)
-        urls = recorder.check(interval=5*60)
-        filename = recorder.generate_filename()
-        c_filename = os.path.join(os.getcwd(), 'files', filename+'.flv')
-        recorder.record(urls[0], c_filename)
-        print('录制完成')
+    mp = multiprocessing.Process
+    tasks = [mp(target=BiliBiliLiveRecorder(room_id).run) for room_id in input_id]
+    for i in tasks:
+        i.start()
+    for i in tasks:
+        i.join()
