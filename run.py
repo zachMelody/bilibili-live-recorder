@@ -46,7 +46,7 @@ class BiliBiliLiveRecorder(BiliBiliLive):
 if __name__ == '__main__':
     print(sys.argv)
     if len(sys.argv) == 2:
-        input_id = str(sys.argv[1])
+        input_id = [str(sys.argv[1])]
     elif len(sys.argv) == 1:
         input_id = config.rooms  # input_id = '917766' '1075'
     else:
