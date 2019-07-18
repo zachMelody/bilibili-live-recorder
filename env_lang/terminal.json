@@ -1,0 +1,12 @@
+{
+    "msg":{
+        "recording":"Recording...",
+        "parameter_error":"Please check if your command is right, for Example: python3 run.py 10086",
+        "waiting":"Waiting for living",
+        "finish":"Record finished",
+        "start":"Start recording"
+    },
+    "label":{
+        "living_room":"Room ID: "
+    }
+}
