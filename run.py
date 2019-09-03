@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 from Live import BiliBiliLive
 import os, sys
 import requests
@@ -8,6 +9,7 @@ import multiprocessing
 import urllib3
 import env_lang
 urllib3.disable_warnings()
+import random
 
 
 class BiliBiliLiveRecorder(BiliBiliLive):
@@ -18,7 +20,6 @@ class BiliBiliLiveRecorder(BiliBiliLive):
 
     def check(self, interval):
         while True:
-            print("checked")
             room_info = self.get_room_info()
             if room_info['status']:
                 self.inform(room_id=self.room_id,desp=room_info['roomname'])
@@ -26,7 +27,7 @@ class BiliBiliLiveRecorder(BiliBiliLive):
                 break
             else:
                 self.print(self.room_id, env_lang.get("msg.waiting"))
-            time.sleep(interval)
+            time.sleep(interval*(1+random.random()))
         return self.get_live_urls()
 
     def record(self, record_url, output_filename):
