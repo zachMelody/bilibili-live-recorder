@@ -4,6 +4,7 @@ import requests
 import time
 import config
 import utils
+import subprocess
 import multiprocessing
 import urllib3
 urllib3.disable_warnings()
@@ -17,30 +18,36 @@ class BiliBiliLiveRecorder(BiliBiliLive):
 
     def check(self, interval):
         while True:
-            room_info = self.get_room_info()
-            if room_info['status']:
-                self.inform(room_id=self.room_id,desp=room_info['roomname'])
-                self.print(self.room_id, room_info['roomname'])
-                break
-            else:
-                self.print(self.room_id, '等待开播')
+            try:
+                room_info = self.get_room_info()
+                if room_info['status']:
+                    self.inform(room_id=self.room_id,desp=room_info['roomname'])
+                    self.print(self.room_id, room_info['roomname'])
+                    break
+                else:
+                    self.print(self.room_id, '等待开播')
+            except Exception as e:
+                self.print(self.room_id, 'Error')
             time.sleep(interval)
         return self.get_live_urls()
 
     def record(self, record_url, output_filename):
-        self.print(self.room_id, '√ 正在录制...' + self.room_id)
-        resp = requests.get(record_url, stream=True)
-        with open(output_filename, "wb") as f:
-            for chunk in resp.iter_content(chunk_size=512):
-                f.write(chunk) if chunk else None
+        try:
+            self.print(self.room_id, '√ 正在录制...' + self.room_id)
+            subprocess.call("wget -O \"" + output_filename + "\" \"" + record_url + "\"",shell=True)
+        except Exception as e:
+            self.print(self.room_id, 'Error while recording')
 
     def run(self):
         while True:
-            urls = self.check(interval=5*60)
-            filename = utils.generate_filename(self.room_id)
-            c_filename = os.path.join(os.getcwd(), 'files', filename)
-            self.record(urls[0], c_filename)
-            self.print(self.room_id, '录制完成')
+            try:
+                urls = self.check(interval=30)
+                filename = utils.generate_filename(self.room_id)
+                c_filename = os.path.join(os.getcwd(), 'files', filename)
+                self.record(urls[0], c_filename)
+                self.print(self.room_id, '录制完成' + c_filename)
+            except Exception as e:
+                self.print(self.room_id, 'Error while checking or recording')
 
 
 if __name__ == '__main__':
