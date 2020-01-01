@@ -34,7 +34,7 @@ class BiliBiliLiveRecorder(BiliBiliLive):
     def record(self, record_url, output_filename):
         try:
             self.print(self.room_id, '√ 正在录制...' + self.room_id)
-            subprocess.call("wget -O \"" + output_filename + "\" \"" + record_url + "\"",shell=True)
+            subprocess.call("wget -U \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36\" -O \"" + output_filename + "\" \"" + record_url + "\"",shell=True)
         except Exception as e:
             self.print(self.room_id, 'Error while recording')
 
