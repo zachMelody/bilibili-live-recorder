@@ -1,2 +1,6 @@
-config.py
 __pycache__
+.idea
+.idea/.gitignore
+*.flv
+config.py
+run.bat
