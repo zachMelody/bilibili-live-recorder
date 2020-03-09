@@ -1,5 +1,6 @@
 from Live import BiliBiliLive
-import os, sys
+import os
+import sys
 import requests
 import time
 import config
@@ -38,7 +39,6 @@ class BiliBiliLiveRecorder(BiliBiliLive):
             headers = dict()
             headers['Accept-Encoding'] = 'identity'
             headers['User-Agent'] = 'Mozilla/5.0 (Windows NT 6.1; Trident/7.0; rv:11.0) like Gecko'
-            headers['Referer'] = re.findall(r'(https://.*\/).*\.flv', record_url)[0]
             resp = requests.get(record_url, stream=True, headers=headers)
             with open(output_filename, "wb") as f:
                 for chunk in resp.iter_content(chunk_size=1024):
