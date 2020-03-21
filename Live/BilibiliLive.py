@@ -25,13 +25,20 @@ class BiliBiliLive(BaseLive):
 
     def get_live_urls(self):
         live_urls = []
-        url = 'https://api.live.bilibili.com/api/playurl'
-        durls = self.common_request('GET', url, {
+        url = 'https://api.live.bilibili.com/room/v1/Room/playUrl'
+        stream_info = self.common_request('GET', url, {
             'cid': self.room_id,
             'otype': 'json',
             'quality': 0,
             'platform': 'web'
         }).json()
-        for durl in durls['durl']:
+        best_quality=stream_info['data']['accept_quality'][0][0]
+        stream_info = self.common_request('GET', url, {
+            'cid': self.room_id,
+            'otype': 'json',
+            'quality': best_quality,
+            'platform': 'web'
+        }).json()
+        for durl in stream_info['data']['durl']:
             live_urls.append(durl['url'])
         return live_urls
