@@ -3,6 +3,7 @@ import requests
 import config
 import env_lang
 
+
 def get_current_time(time_format):
     current_struct_time = time.localtime(time.time())
     current_time = time.strftime(time_format, current_struct_time)
@@ -23,7 +24,8 @@ def inform(room_id, desp=''):
             'desp': desp,
         }
         resp = requests.get(url=config.inform_url, params=param)
-        print_log(room_id=room_id, content='通知完成！') if resp.status_code == 200 else None
+        print_log(room_id=room_id,
+                  content='通知完成！') if resp.status_code == 200 else None
     else:
         pass
 

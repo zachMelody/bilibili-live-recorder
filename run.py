@@ -57,7 +57,7 @@ class BiliBiliLiveRecorder(BiliBiliLive):
             try:
                 urls = self.check(interval=config.check_interval)
                 filename = utils.generate_filename(self.room_id)
-                c_directory = os.path.join(os.getcwd(), 'files')
+                c_directory = os.path.join(os.getcwd(), 'files/'+self.room_id)
                 if not os.path.exists(c_directory):
                     os.makedirs(c_directory)
                 c_filename = os.path.join(c_directory, filename)
