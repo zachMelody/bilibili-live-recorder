@@ -1,6 +1,7 @@
 import time
 import requests
 import config
+import env_lang
 
 
 def get_current_time(time_format):
@@ -23,7 +24,8 @@ def inform(room_id, desp=''):
             'desp': desp,
         }
         resp = requests.get(url=config.inform_url, params=param)
-        print_log(room_id=room_id, content='通知完成！') if resp.status_code == 200 else None
+        print_log(room_id=room_id,
+                  content='通知完成！') if resp.status_code == 200 else None
     else:
         pass
 
@@ -31,7 +33,7 @@ def inform(room_id, desp=''):
 def print_log(room_id='None', content='None'):
     brackets = '[{}]'
     time_part = brackets.format(get_current_time('%Y-%m-%d %H:%M:%S'))
-    room_part = brackets.format('直播间: ' + room_id)
+    room_part = brackets.format(env_lang.get('label.living_room') + room_id)
     print(time_part, room_part, content)
 
 
