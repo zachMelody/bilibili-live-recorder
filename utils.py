@@ -1,6 +1,7 @@
 import time
 import requests
 import config
+import os
 
 
 def get_current_time(time_format):
@@ -33,6 +34,12 @@ def print_log(room_id='None', content='None'):
     time_part = brackets.format(get_current_time('%Y-%m-%d %H:%M:%S'))
     room_part = brackets.format('直播间: ' + room_id)
     print(time_part, room_part, content)
+
+
+def checkRecordDirExisted():
+    dirs = os.path.join(os.getcwd(), 'files')
+    if not os.path.exists(dirs):
+        os.mkdir(dirs)
 
 
 if __name__ == '__main__':
