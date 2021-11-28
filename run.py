@@ -7,7 +7,10 @@ import utils
 import re
 import multiprocessing
 import urllib3
+
 urllib3.disable_warnings()
+
+proxies = {"http": None, "https": None}
 
 
 class BiliBiliLiveRecorder(BiliBiliLive):
@@ -42,7 +45,7 @@ class BiliBiliLiveRecorder(BiliBiliLive):
             headers['Referer'] = re.findall(
                 r'(https://.*\/).*\.flv',
                 record_url)[0]
-            resp = requests.get(record_url, stream=True, headers=headers)
+            resp = self.session.get(record_url, stream=True, headers=headers)
             with open(output_filename, "wb") as f:
                 for chunk in resp.iter_content(chunk_size=1024):
                     f.write(chunk) if chunk else None

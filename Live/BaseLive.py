@@ -12,6 +12,7 @@ class BaseLive:
                           'Chrome/59.0.3071.115 Safari/537.36 '
         }
         self.session = requests.session()
+        self.session.trust_env = False
         self.site_name = ''
         self.site_domain = ''
 

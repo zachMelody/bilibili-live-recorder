@@ -3,6 +3,8 @@ import requests
 import config
 import os
 
+inform_url = 'https://sctapi.ftqq.com/' + config.send_key + '.send'
+
 
 def get_current_time(time_format):
     current_struct_time = time.localtime(time.time())
@@ -20,10 +22,10 @@ def generate_filename(room_id):
 def inform(room_id, desp=''):
     if config.enable_inform:
         param = {
-            'text': '直播间：{} 开始直播啦！'.format(room_id),
+            'title': '直播间：{} 开始直播啦！'.format(room_id),
             'desp': desp,
         }
-        resp = requests.get(url=config.inform_url, params=param)
+        resp = requests.get(url=inform_url, params=param, verify=False, proxies={"http": None, "https": None})
         print_log(room_id=room_id, content='通知完成！') if resp.status_code == 200 else None
     else:
         pass
